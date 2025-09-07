@@ -91,7 +91,6 @@ T_BOOLEANO: 'booleano';
 T_ENTERO: 'entero';
 T_FLOTANTE: 'flotante';
 T_CADENA: 'cadena';
-RETORNAR: 'retornar';
 
 //==========================================Utilidades============================================
 WS: [ \t\r\n]+ -> skip; //A ignorar: espacios, retorno de carrete y salto de linea
