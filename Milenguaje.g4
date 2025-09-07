@@ -60,7 +60,7 @@ tipo: T_BOOLEANO | T_ENTERO | T_FLOTANTE | T_CADENA;
 ************************************************************************************************************/
 
 //=========================================Tipos de datos=========================================
-BOOLEANO: "verdadero" | "falso"; // Debe ser exactamente "verdadero" o "falso". Va de primero para que no se tome como IDENTIFICADOR.
+BOOLEANO: 'verdadero' | 'falso'; // Debe ser exactamente "verdadero" o "falso". Va de primero para que no se tome como IDENTIFICADOR.
 IDENTIFICADOR: [a-zA-Z_][a-zA-Z0-9_]{0,9}; // Debe iniciar por letra, guion bajo. Luego cualquier caracter alfanumerico o guion bajo. Max 10 caracteres.
 FLOTANTE: [0-9]+ '.' [0-9]+; //Uno o mas numeros seguidos de punto y uno o mas decimales.
 ENTERO: [0-9]+; //Uno o mas numeros del 0 al 9
