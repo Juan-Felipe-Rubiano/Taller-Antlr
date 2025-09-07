@@ -27,10 +27,30 @@ parametro: tipo IDENTIFICADOR;
 instrIf: SI '(' expresion ')' '{' instruccion+ '}' (SINO '{' instruccion+ '}')?; //If de tipo C. Ojo, dentro van lineas (instrucciones) para que se pueda p. ej. anidar if.
 instrFor: PARA '(' (declrVar | asigVar)? ';' expresion ';' asigVar? ')' '{' instruccion+ '}';
 instrWhile: MIENTRAS '(' expresion ')' '{' instruccion+ '}';
-instrReturn: 'retornar' expresion? ';';
+instrReturn: RETORNAR expresion? ';';
 declrFun: tipo IDENTIFICADOR '(' parametros? ')' '{' instruccion+ '}';
 llamarFun: IDENTIFICADOR '(' (expresion (',' expresion)*)? ')'; //Se llama a una funcion con 0 o mas parametros (como expresion), separados por comas.
 //================================================================================================
+
+expresion: exprLogico ;  
+    exprLogico: exprAnd (LOGOR exprAnd)*;
+    exprAnd: exprIgualdad (LOGAND exprIgualdad)*;
+    exprIgualdad: exprRel ((IGUAL|DIFERENTE) exprRel )*;
+    exprRel: exprSuma ((MAYORQUE|MENORQUE|MENORIGUAL|MAYORIGUAL) exprSuma)*;
+    exprSuma: exprMult ((MAS|MENOS) exprMult)*; 
+    exprMult: exprPot ((MULTIPLICADO|DIVIDIDO|MODULO) exprPot)*; 
+    exprPot: exprUn (POTENCIADO exprUn)*;
+    exprUn: (LOGNOT | MENOS)* exprResto;
+    exprResto: 
+        '('expresion')'
+        |llamarFun
+        |IDENTIFICADOR
+        |ENTERO
+        |FLOTANTE
+        |CADENA
+        |BOOLEANO;
+
+
 
 tipo: T_BOOLEANO | T_ENTERO | T_FLOTANTE | T_CADENA;
 
@@ -38,7 +58,6 @@ tipo: T_BOOLEANO | T_ENTERO | T_FLOTANTE | T_CADENA;
 /***********************************************************************************************************
 * Reglas de Lexer (en mayusculas por convencion) (importante prioridad de arriba a abajo)                  *
 ************************************************************************************************************/
-
 
 //=========================================Tipos de datos=========================================
 BOOLEANO: "verdadero" | "falso"; // Debe ser exactamente "verdadero" o "falso". Va de primero para que no se tome como IDENTIFICADOR.
