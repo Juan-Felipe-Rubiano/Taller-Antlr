@@ -24,7 +24,7 @@ parametros: parametro (',' parametro)*;
 parametro: tipo IDENTIFICADOR;
 
 //==========================================Estructuras de control================================
-instrIf: SI '(' expresion ')' '{' instruccion+ '}' (SINO '{' instruccion+ '}')?; //If de tipo C. Ojo, dentro van lineas (instrucciones) para que se pueda p. ej. anidar if.
+instrIf: SI '(' expresion ')' '{' instruccion* '}' (SINO '{' instruccion+ '}')?; //If de tipo C. Ojo, dentro van lineas (instrucciones) para que se pueda p. ej. anidar if.
 instrFor: PARA '(' (declrVar | asigVar)? ';' expresion ';' asigVar? ')' '{' instruccion+ '}';
 instrWhile: MIENTRAS '(' expresion ')' '{' instruccion+ '}';
 instrReturn: RETORNAR expresion? ';';
@@ -59,9 +59,15 @@ tipo: T_BOOLEANO | T_ENTERO | T_FLOTANTE | T_CADENA;
 * Reglas de Lexer (en mayusculas por convencion) (importante prioridad de arriba a abajo)                  *
 ************************************************************************************************************/
 
+//==========================================Palabras Reservadas================================
+T_BOOLEANO: 'booleano';
+T_ENTERO: 'entero';
+T_FLOTANTE: 'flotante';
+T_CADENA: 'cadena';
+RETORNAR: 'retornar';
+
 //=========================================Tipos de datos=========================================
 BOOLEANO: 'verdadero' | 'falso'; // Debe ser exactamente "verdadero" o "falso". Va de primero para que no se tome como IDENTIFICADOR.
-IDENTIFICADOR: [a-zA-Z_][a-zA-Z0-9_]{0,9}; // Debe iniciar por letra, guion bajo. Luego cualquier caracter alfanumerico o guion bajo. Max 10 caracteres.
 FLOTANTE: [0-9]+ '.' [0-9]+; //Uno o mas numeros seguidos de punto y uno o mas decimales.
 ENTERO: [0-9]+; //Uno o mas numeros del 0 al 9
 CADENA: '"' (~["\\] | '\\' .)* '"'; // Inicia y termina por doble comilla, se repite 0+ veces. No se permite usar comillas dobles dentro ni el backslash sin caracter a escapar.
@@ -71,6 +77,9 @@ SI: 'si';
 SINO: 'sino';
 PARA: 'para';
 MIENTRAS: 'mientras';
+
+// ======== IDENTIFICADOR *después* de las palabras reservadas ==============================================
+IDENTIFICADOR: [a-zA-Z_][a-zA-Z0-9_]*; // Debe iniciar por letra, guion bajo. Luego cualquier caracter alfanumerico o guion bajo. Max 10 caracteres.
 
 //==========================================Operadores================================
 //#######Aritmeticos########
@@ -105,11 +114,6 @@ BITXOR: '^';
 BITLSHIFT: '<<';
 BITRSHIFT: '>>';
 
-//==========================================Palabras Reservadas================================
-T_BOOLEANO: 'booleano';
-T_ENTERO: 'entero';
-T_FLOTANTE: 'flotante';
-T_CADENA: 'cadena';
 
 //==========================================Utilidades============================================
 WS: [ \t\r\n]+ -> skip; //A ignorar: espacios, retorno de carrete y salto de linea

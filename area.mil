@@ -1,0 +1,14 @@
+flotante areaCir(flotante rad) {
+    flotante area = 3.14 * rad * rad;
+    retornar area;
+}
+
+entero main() {
+    flotante rad = 5.0;
+    flotante area = areaCir(rad);
+    imprimir("el area de un circulo de un radio de 5 es ");
+    imprimir(area);
+    retornar 0;
+}
+
+main();

@@ -30,9 +30,17 @@ public class MilenguajeEvaluator extends MilenguajeBaseVisitor<Object> {
         return null;
     }
 
+    private void Longitud(String id) {
+        if (id.length() > 10) {
+            throw new RuntimeException("Identificador demasiado largo (max 10): " + id);
+        }
+    }
+
+
     @Override
     public Object visitDeclrVar(MilenguajeParser.DeclrVarContext ctx) {
         String nombre = ctx.IDENTIFICADOR().getText();
+        Longitud(nombre);
         String tipo = ctx.tipo().getText();
         Object valor = null;
         

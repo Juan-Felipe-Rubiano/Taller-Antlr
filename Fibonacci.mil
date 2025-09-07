@@ -1,0 +1,21 @@
+entero main() {
+    entero a = 0;
+    entero b = 1;
+    entero temp;
+    entero i = 1;
+
+    imprimir(a);
+    imprimir(b);
+    mientras (i <= 50) {
+        temp = a + b;
+        a = b;
+        b = temp;
+        imprimir(b);
+        i = i + 1;
+    }
+}
+
+main();
+
+
+

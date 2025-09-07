@@ -1,15 +1,14 @@
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.Nullable;
 
 public class MilenguajeErrorListener extends BaseErrorListener {
     
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer,
-                           @Nullable Object offendingSymbol,
+                           Object offendingSymbol,
                            int line,
                            int charPositionInLine,
                            String msg,
-                           @Nullable RecognitionException e) {
+                           RecognitionException e) {
         
         // Personalizar mensajes de error en español
         String mensajePersonalizado = personalizarMensaje(msg, offendingSymbol);
