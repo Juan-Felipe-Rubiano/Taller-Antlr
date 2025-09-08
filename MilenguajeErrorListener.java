@@ -36,6 +36,17 @@ public class MilenguajeErrorListener extends BaseErrorListener {
                 System.err.println(indicator.toString());
             }
         }
+        // Validación: identificadores con más de 10 caracteres
+        if (offendingSymbol instanceof Token) {
+            Token token = (Token) offendingSymbol;
+            if (token.getType() == MilenguajeLexer.IDENTIFICADOR &&
+                token.getText().length() > 10) {
+                throw new RuntimeException("Error léxico en línea " + line +
+                                           ", columna " + charPositionInLine +
+                                           ": el identificador '" + token.getText() +
+                                           "' excede el máximo de 10 caracteres.");
+            }
+        }
     }
     
     private String personalizarMensaje(String mensajeOriginal, Object simboloProblematico) {
