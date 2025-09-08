@@ -37,41 +37,41 @@ public class MilenguajeEvaluator extends MilenguajeBaseVisitor<Object> {
     }
 
 
-    @Override
-    public Object visitDeclrVar(MilenguajeParser.DeclrVarContext ctx) {
-        String nombre = ctx.IDENTIFICADOR().getText();
-        Longitud(nombre);
-        String tipo = ctx.tipo().getText();
-        Object valor = null;
-        
-        if (ctx.expresion() != null) {
-            valor = visit(ctx.expresion());
-        } else {
-            // Valores por defecto
-            switch (tipo) {
-                case "entero":
-                    valor = 0;
-                    break;
-                case "flotante":
-                    valor = 0.0;
-                    break;
-                case "booleano":
-                    valor = false;
-                    break;
-                case "cadena":
-                    valor = "";
-                    break;
-            }
+@Override
+public Object visitDeclrVar(MilenguajeParser.DeclrVarContext ctx) {
+    String nombre = ctx.IDENTIFICADOR().getText();
+    Longitud(nombre);
+    String tipo = ctx.tipo().getText();
+    Object valor = null;
+    
+    if (ctx.expresion() != null) {
+        valor = visit(ctx.expresion());
+    } else {
+        // Valores por defecto
+        switch (tipo) {
+            case "entero":
+                valor = 0L;  // Changed to Long
+                break;
+            case "flotante":
+                valor = 0.0;
+                break;
+            case "booleano":
+                valor = false;
+                break;
+            case "cadena":
+                valor = "";
+                break;
         }
-        
-        // Verificar que el tipo coincida
-        if (!verificarTipo(valor, tipo)) {
-            throw new RuntimeException("Error de tipo en variable " + nombre);
-        }
-        
-        getCurrentScope().put(nombre, valor);
-        return null;
     }
+    
+    // Verificar que el tipo coincida
+    if (!verificarTipo(valor, tipo)) {
+        throw new RuntimeException("Error de tipo en variable " + nombre);
+    }
+    
+    getCurrentScope().put(nombre, valor);
+    return null;
+}
 
     @Override
     public Object visitAsigVar(MilenguajeParser.AsigVarContext ctx) {
@@ -437,31 +437,31 @@ public class MilenguajeEvaluator extends MilenguajeBaseVisitor<Object> {
         return null;
     }
 
-    @Override
-    public Object visitExprResto(MilenguajeParser.ExprRestoContext ctx) {
-        if (ctx.expresion() != null) {
-            return visit(ctx.expresion());
-        } else if (ctx.llamarFun() != null) {
-            return visit(ctx.llamarFun());
-        } else if (ctx.IDENTIFICADOR() != null) {
-            String nombre = ctx.IDENTIFICADOR().getText();
-            Object valor = getVariable(nombre);
-            if (valor == null) {
-                throw new RuntimeException("Variable no declarada: " + nombre);
-            }
-            return valor;
-        } else if (ctx.ENTERO() != null) {
-            return Integer.parseInt(ctx.ENTERO().getText());
-        } else if (ctx.FLOTANTE() != null) {
-            return Double.parseDouble(ctx.FLOTANTE().getText());
-        } else if (ctx.CADENA() != null) {
-            String cadena = ctx.CADENA().getText();
-            return cadena.substring(1, cadena.length() - 1); // Remover comillas
-        } else if (ctx.BOOLEANO() != null) {
-            return ctx.BOOLEANO().getText().equals("verdadero");
+@Override
+public Object visitExprResto(MilenguajeParser.ExprRestoContext ctx) {
+    if (ctx.expresion() != null) {
+        return visit(ctx.expresion());
+    } else if (ctx.llamarFun() != null) {
+        return visit(ctx.llamarFun());
+    } else if (ctx.IDENTIFICADOR() != null) {
+        String nombre = ctx.IDENTIFICADOR().getText();
+        Object valor = getVariable(nombre);
+        if (valor == null) {
+            throw new RuntimeException("Variable no declarada: " + nombre);
         }
-        return null;
+        return valor;
+    } else if (ctx.ENTERO() != null) {
+        return Long.parseLong(ctx.ENTERO().getText());  // Changed to Long.parseLong
+    } else if (ctx.FLOTANTE() != null) {
+        return Double.parseDouble(ctx.FLOTANTE().getText());
+    } else if (ctx.CADENA() != null) {
+        String cadena = ctx.CADENA().getText();
+        return cadena.substring(1, cadena.length() - 1); // Remover comillas
+    } else if (ctx.BOOLEANO() != null) {
+        return ctx.BOOLEANO().getText().equals("verdadero");
     }
+    return null;
+}
 
     // Métodos auxiliares
     private void pushScope() {
@@ -482,75 +482,75 @@ public class MilenguajeEvaluator extends MilenguajeBaseVisitor<Object> {
         return variables.get(nombre);
     }
 
-    private boolean verificarTipo(Object valor, String tipo) {
-        switch (tipo) {
-            case "entero":
-                return valor instanceof Integer;
-            case "flotante":
-                return valor instanceof Double;
-            case "booleano":
-                return valor instanceof Boolean;
-            case "cadena":
-                return valor instanceof String;
-            default:
-                return false;
-        }
+private boolean verificarTipo(Object valor, String tipo) {
+    switch (tipo) {
+        case "entero":
+            return valor instanceof Long;  // Changed to Long
+        case "flotante":
+            return valor instanceof Double;
+        case "booleano":
+            return valor instanceof Boolean;
+        case "cadena":
+            return valor instanceof String;
+        default:
+            return false;
     }
+}
 
     // Operaciones aritméticas
-    private Object sumar(Object a, Object b) {
-        if (a instanceof Integer && b instanceof Integer) {
-            return (Integer) a + (Integer) b;
-        } else if (a instanceof Number && b instanceof Number) {
-            return ((Number) a).doubleValue() + ((Number) b).doubleValue();
-        } else if (a instanceof String && b instanceof String) {
-            return (String) a + (String) b;
-        }
-        throw new RuntimeException("Operación de suma no válida");
+private Object sumar(Object a, Object b) {
+    if (a instanceof Long && b instanceof Long) {
+        return (Long) a + (Long) b;  // Added support for Long
+    } else if (a instanceof Number && b instanceof Number) {
+        return ((Number) a).doubleValue() + ((Number) b).doubleValue();
+    } else if (a instanceof String && b instanceof String) {
+        return (String) a + (String) b;
     }
+    throw new RuntimeException("Operación de suma no válida");
+}
 
-    private Object restar(Object a, Object b) {
-        if (a instanceof Integer && b instanceof Integer) {
-            return (Integer) a - (Integer) b;
-        } else if (a instanceof Number && b instanceof Number) {
-            return ((Number) a).doubleValue() - ((Number) b).doubleValue();
-        }
-        throw new RuntimeException("Operación de resta no válida");
+private Object restar(Object a, Object b) {
+    if (a instanceof Long && b instanceof Long) {
+        return (Long) a - (Long) b;  // Added support for Long
+    } else if (a instanceof Number && b instanceof Number) {
+        return ((Number) a).doubleValue() - ((Number) b).doubleValue();
     }
+    throw new RuntimeException("Operación de resta no válida");
+}
 
-    private Object multiplicar(Object a, Object b) {
-        if (a instanceof Integer && b instanceof Integer) {
-            return (Integer) a * (Integer) b;
-        } else if (a instanceof Number && b instanceof Number) {
-            return ((Number) a).doubleValue() * ((Number) b).doubleValue();
-        }
-        throw new RuntimeException("Operación de multiplicación no válida");
+private Object multiplicar(Object a, Object b) {
+    if (a instanceof Long && b instanceof Long) {
+        return (Long) a * (Long) b;  // Added support for Long
+    } else if (a instanceof Number && b instanceof Number) {
+        return ((Number) a).doubleValue() * ((Number) b).doubleValue();
     }
+    throw new RuntimeException("Operación de multiplicación no válida");
+}
 
-    private Object dividir(Object a, Object b) {
-        if (a instanceof Number && b instanceof Number) {
-            double divisor = ((Number) b).doubleValue();
-            if (divisor == 0) {
-                throw new RuntimeException("División por cero");
-            }
-            return ((Number) a).doubleValue() / divisor;
+private Object dividir(Object a, Object b) {
+    if (a instanceof Number && b instanceof Number) {
+        double divisor = ((Number) b).doubleValue();
+        if (divisor == 0) {
+            throw new RuntimeException("División por cero");
         }
-        throw new RuntimeException("Operación de división no válida");
+        return ((Number) a).doubleValue() / divisor;
     }
+    throw new RuntimeException("Operación de división no válida");
+}
 
-    private Object modulo(Object a, Object b) {
-        if (a instanceof Integer && b instanceof Integer) {
-            return (Integer) a % (Integer) b;
-        }
-        throw new RuntimeException("Operación de módulo no válida");
+private Object modulo(Object a, Object b) {
+    if (a instanceof Long && b instanceof Long) {
+        return (Long) a % (Long) b;  // Added support for Long
     }
+    throw new RuntimeException("Operación de módulo no válida");
+}
 
-    private Object potencia(Object a, Object b) {
-        if (a instanceof Number && b instanceof Number) {
-            return Math.pow(((Number) a).doubleValue(), ((Number) b).doubleValue());
-        }
-        throw new RuntimeException("Operación de potencia no válida");
+private Object potencia(Object a, Object b) {
+    if (a instanceof Number && b instanceof Number) {
+        return Math.pow(((Number) a).doubleValue(), ((Number) b).doubleValue());
     }
+    throw new RuntimeException("Operación de potencia no válida");
+}
 
     // Operaciones de comparación
     private Object igual(Object a, Object b) {
